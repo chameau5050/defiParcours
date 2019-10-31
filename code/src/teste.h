@@ -1,0 +1,2 @@
+
+int patate(int a);

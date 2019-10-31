@@ -9,7 +9,13 @@ Date: Derniere date de modification
 Inclure les librairies de functions que vous voulez utiliser
 **************************************************************************** */
 
+
+//#include "teste.h"
+//#include"../lib/ADJD-S311-master/ADJDS311/ADJDS311.h"
+//#include "../SharpIR-2.0.1/src/SharpIR.h"
+#include "move.h"
 #include <LibRobus.h> // Essentielle pour utiliser RobUS
+
 
 
 
@@ -39,72 +45,17 @@ Fonctions d'initialisation (setup)
 // -> Generalement on y initilise les varibbles globales
 
 void setup(){
+  
   BoardInit();
 }
 
-int stopG=0, stopD = 0;
-float Vg=0.2, Vd=0.2; 
-
-void calibration(){
-
-  avancePIDCalib(15);
-  
-}
-
-void avancePIDCalib(int32_t distance){
-
-  Serial.println((distance*3200));
-  int32_t tour = (distance*3200)/24.5;
-  const float KP = 0.0001;
-  const float KI = 0.00002;
-
-  float vitesseGauche=0.2,vitesseDroite=0.2;
-  ENCODER_Reset(0);
-  ENCODER_ReadReset(1);
-  MOTOR_SetSpeed(0,Vg);
-  MOTOR_SetSpeed(1,Vd);
-  
-   int tGauche=0, tDroite=0;
-
-   int gauche = 0, droite=0;
-
-  while (tGauche < tour-stopG || tDroite < tour-stopD)
-  {
-    droite =ENCODER_Read(1);
-    gauche =ENCODER_Read(0);
-    ENCODER_Reset(1);
-    ENCODER_Reset(0);
-   
-    tGauche += gauche;
-    tDroite += droite;
-    //PID Proportionelle et intégral
-    Serial.println((gauche - droite)*KP + (tGauche-tDroite)*KI);
-    Vd += (gauche - droite)*KP + (tGauche-tDroite)*KI;
-    MOTOR_SetSpeed(1,Vd);
-    //Serial.println(gauche);
-    delay(100);
-
-  }
-  
-  stopG = tGauche + ENCODER_Read(0)-tour ;
-  stopD = tDroite + ENCODER_Read(1)-tour;
-
-
-  Serial.println(stopG);
-  Serial.println(stopD);
-  Serial.println(Vd);
-  Serial.println(Vg);
-  MOTOR_SetSpeed(0,0);
-  MOTOR_SetSpeed(1,0);
-  
-}
 
 /* ****************************************************************************
 Fonctions de boucle infini (loop())
 **************************************************************************** */
 // -> Se fait appeler perpetuellement suite au "setup"
 
-
+/*
 void avancePID(int32_t distance){
 
   Serial.println((distance*3200));
@@ -192,7 +143,7 @@ void avancePID2(int32_t distance){
 }
 
 
-void turn4(int mult45){
+void turn(int mult45){
   
   int signe;
   if(mult45<0)
@@ -324,138 +275,7 @@ void turn3(int mult45)
 delay(100);
 }
 
-void turn(int mult45)
-{
-  
-
-  
-  int pulse0, pulse1, pulse45;
-  pulse45=1012;
-  ENCODER_ReadReset(0);
-  ENCODER_ReadReset(1);
-  pulse0=ENCODER_Read(0);
-  pulse1=ENCODER_Read(1);
-  if (mult45>0)
-  {
-    while (pulse0<(mult45*pulse45) && pulse1>-1*(mult45*pulse45))
-    {
-      
-      MOTOR_SetSpeed(0,0.2);
-      MOTOR_SetSpeed(1,-0.2);
-      pulse0=ENCODER_Read(0);
-      pulse1=ENCODER_Read(1);
-    
-
-    }
-    
-  }
-  else if (mult45<0)
-  {
-    while (pulse0>(mult45*pulse45)  && pulse1<-1*(mult45*pulse45))
-    {
-     
-      MOTOR_SetSpeed(0,-0.2);
-      MOTOR_SetSpeed(1,0.2);
-      pulse0=ENCODER_Read(0);
-      pulse1=ENCODER_Read(1);
-
-    }
-  }
-  MOTOR_SetSpeed(0,0);
-  MOTOR_SetSpeed(1,0);
-  
-
-delay(100);
-
-}
-
-void turn2(int mult45)
-{
-  const float KP = 0.0001;
-  const float KI = 0.00002;
-
-  int pulse0, pulse1, pulse45,erreur_45;
-  pulse45=1024;
-  erreur_45=210;
-  int tGauche=0, tDroite=0;
-  
-   ENCODER_ReadReset(0);
-   ENCODER_ReadReset(1);
-    pulse0=ENCODER_Read(0);
-    pulse1=ENCODER_Read(1);
-  if (mult45>0)
-  {
-    MOTOR_SetSpeed(0,0.2);
-    MOTOR_SetSpeed(1,-0.2);
-
-    float vitesseDroite=-0.2;
-    tGauche=0; 
-    tDroite=0;
-
-    int gauche = 0, droite=0;
-
-    while (tGauche<((mult45*pulse45)-erreur_45) && tDroite>-1*((mult45*pulse45)-erreur_45))
-    {
-    Serial.println(tGauche);
-    Serial.println((mult45*pulse45)-erreur_45);
-    droite =-1*ENCODER_Read(1);
-    gauche =ENCODER_Read(0);
-    ENCODER_Reset(1);
-    ENCODER_Reset(0);
-   
-    tGauche += gauche;
-    tDroite += droite;
-    //PID Proportionelle et intégral
-    vitesseDroite += -1*((gauche - droite)*KP + (tGauche-tDroite)*KI);
-    MOTOR_SetSpeed(1,vitesseDroite);
-    delay(100);
-    
-
-    }
-    
-  }
-  else if (mult45<0)
-  {
-
-    float vitesseDroite=0.2;
-    tGauche=0; 
-    tDroite=0;
-
-    int gauche = 0, droite=0;
-
-    MOTOR_SetSpeed(0,-0.2);
-    MOTOR_SetSpeed(1,0.2);
-    while (tGauche>((mult45*pulse45)-erreur_45)  && tDroite<-1*((mult45*pulse45)-erreur_45))
-    {
-     
-      gauche=-1*ENCODER_Read(0);
-      droite=ENCODER_Read(1);
-      ENCODER_Reset(1);
-      ENCODER_Reset(0);
-   
-      tGauche += gauche;
-      tDroite += droite;
-      Serial.println("a");
-      Serial.println(vitesseDroite);
-
-      //PID Proportionelle et intégral
-      Serial.println((gauche - droite)*KP + (tGauche-tDroite)*KI);
-      vitesseDroite += ((gauche - droite)*KP + (tGauche-tDroite)*KI);
-      MOTOR_SetSpeed(1,vitesseDroite);
-      delay(100);
-
-    }
-  }
-  MOTOR_SetSpeed(0,0);
-  MOTOR_SetSpeed(1,0);
-
-delay(100);
-Serial.println(tGauche);
-Serial.println(tDroite);
-}
-
-
-
+*/
 
 
 void loop() {
@@ -463,26 +283,29 @@ void loop() {
   
   // SOFT_TIMER_Update(); // A decommenter pour utiliser des compteurs logiciels
 
+
 if(ROBUS_IsBumper(2)){
-  calibration();
+ 
 }else if(ROBUS_IsBumper(3)){
+  //turn(-2);
+ /*
  avancePID(124);//122.5
-  turn4(-2);
+  turn(-2);
   avancePID(100);
-  turn4(2);
+  turn(2);
   avancePID(45);
-  turn4(2);
+  turn(2);
   avancePID(55);
-  turn4(-2);
+  turn(-2);
   avancePID(210);
-  turn4(2);
+  turn(2);
   avancePID(45);
-  turn4(-2);
+  turn(-2);
   avancePID(140);
-  turn4(-4);
+  turn(-4);
   //ballon
   avancePID(250);
-  turn2(1000);
+ */
   /*
   avancePID(45);
   turn4(-2);
