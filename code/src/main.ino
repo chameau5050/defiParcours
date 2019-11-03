@@ -189,7 +189,7 @@ void avancePID(int32_t distance){  //en cm
 void lineFollow(){
 
 }
-int scanBall(){
+void scanBall(){
   int startAngle=60;
   int totalAngle=2*startAngle;
   int numDivisions=20;
@@ -200,7 +200,7 @@ int scanBall(){
   int highest=0;
   int pos=0;
   int posBall;
-  turn(60);
+  turn(startAngle);
   for (int i = 0;i<=numDivisions ; i++){ 
     disUp[i]=SharpIR1.distance();
     disDown[i]=SharpIR2.distance();
@@ -209,12 +209,13 @@ int scanBall(){
   for (int i = 0; i<=numDivisions;i++){
     disDiff[i]=disUp[i]-disDown[i];
     if (disDiff[i]>highest){
-      disDiff[i]=highest;
+      highest=disDiff[i];
       pos=i;
     }
   }
   posBall=startAngle-(pos*divLength);
-  return posBall;
+  turn(startAngle);
+  turn(posBall);
 }
 
 /* ****************************************************************************
@@ -237,10 +238,6 @@ Fonctions de boucle infini (loop())
 void loop() {
   // SOFT_TIMER_Update(); // A decommenter pour utiliser des compteurs logiciels
   delay(10);// Delais pour décharger le CPU
-  delay(2000);   
-
-  int dis=SharpIR.distance();  // this returns the distance to the object you're measuring
-
-  Serial.print("Mean distance: ");  // returns it to the serial monitor
-  Serial.println(dis);
+  scanBall();
+  delay(5000);
 }
