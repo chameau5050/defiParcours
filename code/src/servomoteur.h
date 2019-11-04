@@ -1,0 +1,1 @@
+void servomoteur (int angle);
