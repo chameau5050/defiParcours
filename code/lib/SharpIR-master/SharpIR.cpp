@@ -88,7 +88,7 @@ int SharpIR::distance() {
 
     for (int i=0; i<NB_SAMPLE; i++){
         // Read analog value
-        ir_val[i] = ROBUS_ReadIR(_irPin);
+        ir_val[i] = analogRead(_irPin);
     }
     
     // Sort it 
