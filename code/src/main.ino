@@ -12,6 +12,7 @@ Inclure les librairies de functions que vous voulez utiliser
 #include <Arduino.h>
 #include <LibRobus.h> // Essentielle pour utiliser RobUS
 #include <SharpIR.h>
+#include "servomoteur.h"
 #define model 1080
 #define ir1 1
 #define ir2 2
@@ -239,7 +240,7 @@ void loop() {
   delay(10);// Delais pour décharger le CPU
   delay(2000);   
 
-  int dis=SharpIR.distance();  // this returns the distance to the object you're measuring
+  int dis=SharpIR1.distance();  // this returns the distance to the object you're measuring
 
   Serial.print("Mean distance: ");  // returns it to the serial monitor
   Serial.println(dis);
