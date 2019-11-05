@@ -2,8 +2,108 @@
 #include"move.h"
 #include<LibRobus.h>
 
+void turnAngle(int angle){ //pour tournee en multiple de 1 degre
+  const int cycle = 100;
+  const float KP = 0.0001;
+  const float KI = 0.00002;
+  const int pulse1 = 21 ;
+  const float erreur = 3;
+  float tour = angle*pulse1;
+  
+  if(tour<0)
+    tour*=-1;
+  float vitesseDroite=-0.1, vitesseGauche=0.1;
 
-void avancePID(int distance){
+  int tGauche=0, tDroite=0;
+  int gauche = 0, droite=0;
+  int lastG=0, lastD=0;
+  ENCODER_Reset(0);
+  ENCODER_Reset(1);
+
+  if (angle>0)
+  {
+    //setup
+    vitesseGauche =0.2;
+    vitesseDroite=-0.2;
+  
+    //démarage moteur
+    MOTOR_SetSpeed(0,vitesseGauche);
+    MOTOR_SetSpeed(1,vitesseDroite);
+
+    while (tGauche < tour-erreur || tDroite < tour-erreur)
+    {
+      droite =-1*ENCODER_Read(1);
+      gauche =ENCODER_Read(0);
+      tGauche += gauche-lastG;
+      tDroite += droite-lastD;
+
+      lastG= gauche;
+      lastD = droite;
+
+      if(gauche>cycle){
+        ENCODER_Reset(1);
+        ENCODER_Reset(0);
+        //PID Proportionelle et intégral
+        vitesseDroite += -1*((gauche - droite)*KP + (tGauche-tDroite)*KI);
+        MOTOR_SetSpeed(1,vitesseDroite);
+        lastG=0;
+        lastD=0;
+      }
+
+      if(tGauche > tour-erreur){
+        MOTOR_SetSpeed(0,0);
+      }
+
+      if(tDroite > tour-erreur){
+        MOTOR_SetSpeed(1,0);
+      }
+
+    }
+    
+  }
+  else if (angle<0)
+  {
+
+    vitesseDroite=0.2;
+    vitesseGauche=-0.2;
+
+    MOTOR_SetSpeed(0,vitesseGauche);
+    MOTOR_SetSpeed(1,vitesseDroite);
+
+    while (tGauche < tour-erreur  || tDroite < tour-erreur)
+    {
+      gauche=-1*ENCODER_Read(0);
+      droite=ENCODER_Read(1);
+      tGauche += gauche-lastG;
+      tDroite += droite-lastD;
+
+      lastG= gauche;
+      lastD = droite;
+      if(gauche>cycle){
+        ENCODER_Reset(1);
+        ENCODER_Reset(0);
+        
+        //PID Proportionelle et intégral
+        vitesseDroite += ((gauche - droite)*KP + (tGauche-tDroite)*KI);
+        lastG=0;
+        lastD=0;
+      }
+      if(tGauche > tour-erreur){
+        MOTOR_SetSpeed(0,0);
+      }
+
+      if(tDroite > tour-erreur){
+        MOTOR_SetSpeed(1,0);
+      }
+    
+    }
+  }
+  MOTOR_SetSpeed(0,0);
+  MOTOR_SetSpeed(1,0);
+ 
+}
+
+void avancePID(int distance){//avance pour avancer selon une distance
 
   Serial.println((distance*3200));
   int32_t d = distance;

@@ -13,3 +13,10 @@ entrer :  la distance à parcourir en centimètre
 sortie : rien
 */
 void avancePID(int distance);
+
+/*
+fonction: tourner a des multiples de 1 degre
+entrer : angle
+sortie: rien
+*/
+void turnAgnle(int angle);

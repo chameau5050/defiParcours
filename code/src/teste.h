@@ -1,2 +1,0 @@
-
-int patate(int a);
