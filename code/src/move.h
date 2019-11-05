@@ -1,5 +1,4 @@
 
-
 /*
 fonction : faire tourner le robot à des multiple de 45 degré
 entrer :  multiple de 45 degré positif pour tourner vers la droite négatif vers la gauche
@@ -19,4 +18,4 @@ fonction: tourner a des multiples de 1 degre
 entrer : angle
 sortie: rien
 */
-void turnAgnle(int angle);
+void turnAngle(int angle);

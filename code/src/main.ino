@@ -12,11 +12,8 @@ Inclure les librairies de functions que vous voulez utiliser
 #include <Arduino.h>
 #include <LibRobus.h> // Essentielle pour utiliser RobUS
 #include <SharpIR.h>
-#define model 1080
-#define ir1 A8
-#define ir2 A9
-SharpIR SharpIR1(ir2, model);//up
-SharpIR SharpIR2(ir1, model);//down
+#include "move.h"
+#include "capteur.h"
 /* ****************************************************************************
 Variables globales et defines
 **************************************************************************** */
@@ -27,7 +24,6 @@ int target=1;
 /* ****************************************************************************
 Vos propres fonctions sont creees ici
 **************************************************************************** */
-
 
 /* ****************************************************************************
 Fonctions d'initialisation (setup)

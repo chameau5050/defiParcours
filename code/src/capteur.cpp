@@ -2,10 +2,15 @@
 #include "capteur.h"
 #include "move.h"
 #include <SharpIR.h>
-#include <ADJDS311.h>
+//#include <ADJDS311.h>
+#define model 1080
+#define ir1 A8
+#define ir2 A9
+SharpIR SharpIR1(ir2, model);//up
+SharpIR SharpIR2(ir1, model);//down
 
 int scanBall(int numDivisions){
-  int startAngle=60;
+  int startAngle=30;
   int totalAngle=2*startAngle;
   int divLength=totalAngle/numDivisions;
   int disUp[numDivisions+1];
@@ -21,7 +26,7 @@ int scanBall(int numDivisions){
     disDown[i]=SharpIR2.distance();
     Serial.println(disUp[i]);
     Serial.println(disDown[i]);
-    turnAngle(-divLength*8/10);
+    turnAngle(-divLength*7/10);
   }
   for (int i = 0; i<=numDivisions;i++){
     disDiff[i]=disUp[i]-disDown[i];
@@ -38,12 +43,3 @@ int scanBall(int numDivisions){
   return disDown[pos];
 }
 
-int presligne(){//fonction qui voit si le suiveur a vu une ligne noir
-  return 0;
-}
-void PID_capteur(){
-
-}
-int couleur(){//red =0 vert=1 bleu=2 jaune=3
-
-}
