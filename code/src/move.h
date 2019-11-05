@@ -19,3 +19,8 @@ entrer : angle
 sortie: rien
 */
 void turnAngle(int angle);
+/*
+fonction: avancer et spike ball
+entrer: distance
+sortie: rien*/
+int spikePID(int distance);

@@ -152,6 +152,65 @@ void avancePID(int distance){//avance pour avancer selon une distance
   delay(100);
   
 }
+int spikePID(int distance){//avance pour avancer selon une distance
+
+  Serial.println((distance*3200));
+  int32_t d = distance;
+  int32_t tour = (d*3200)/24.5;
+  const float KP = 0.0001;
+  const float KI = 0.00002;
+
+  float vitesseGauche=0.3,vitesseDroite=0.3 ;
+  ENCODER_Reset(0);
+  ENCODER_ReadReset(1);
+  MOTOR_SetSpeed(1,vitesseDroite);
+  MOTOR_SetSpeed(0,vitesseGauche);
+  
+   int tGauche=0, tDroite=0;
+  
+   int gauche = 0, droite=0;
+    int lastD=0, lastG=0;
+  while (tGauche < tour -225 || tDroite < tour-225 )
+  {
+    if (ROBUS_IsBumper(3)){
+      SERVO_Enable(1);
+      SERVO_SetAngle(0,35);
+      delay(500);
+      SERVO_SetAngle(0,55);
+      MOTOR_SetSpeed(0,0);
+      MOTOR_SetSpeed(1,0);
+      delay(100);
+      return 0;
+    }
+    droite = ENCODER_Read(1);
+    gauche = ENCODER_Read(0);
+    ENCODER_Reset(1);
+    ENCODER_Reset(0);
+    Serial.println(tour);
+    Serial.println(tGauche);
+    Serial.println(tDroite);
+    tGauche += gauche ;
+    tDroite += droite ;
+
+    //PID Proportionelle et intégral
+    Serial.println((gauche - droite)*KP + (tGauche-tDroite)*KI);
+    vitesseDroite += (gauche - droite)*KP + (tGauche-tDroite)*KI;
+    MOTOR_SetSpeed(1,vitesseDroite);
+    //Serial.println(gauche);
+    lastD = droite;
+    lastG = gauche;
+
+    delay(50);
+
+  }
+  
+
+  Serial.println("patate");
+  MOTOR_SetSpeed(0,0);
+  MOTOR_SetSpeed(1,0);
+  delay(100);
+  return 0;
+}
 
 
 void turn3(int mult45)
