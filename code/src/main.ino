@@ -12,8 +12,10 @@ Inclure les librairies de functions que vous voulez utiliser
 
 #include <LibRobus.h> // Essentielle pour utiliser RobUS
 #include <stdio.h>
-#include <arduino.h>
+#include <math.h>
+#include <ADJDS311.h>
 #include "PID.h"
+#include "capteurs.h"
 
 /* ****************************************************************************
 Variables globales et defines
@@ -28,10 +30,13 @@ Vos propres fonctions sont creees ici
 **************************************************************************** */
 void suivre()
 {
+  Serial.println("rentre capteur");
   PID_capteur();
+  Serial.println("rentre decel");
+  Deceleration();
 }
 
-void test()
+void test_suiveur()
 {
   int gauche_3=analogRead(A7), gauche_2=analogRead(A6), gauche_1=analogRead(A5), gauche_0=analogRead(A4);
   int droite_3=analogRead(A0), droite_2=analogRead(A1), droite_1=analogRead(A2), droite_0=analogRead(A3);
@@ -56,6 +61,29 @@ void test()
   Serial.println((gauche_2*5+gauche_1*2+gauche_0)-(droite_0+droite_1*2+droite_2*5));
 }
 
+/*
+void test_couleur()
+{
+  ADJDS311 colorSensor(2);
+  RGBC color = colorSensor.read();
+
+  Serial.println(LireCouleur());
+  delay(200);
+  
+    * Pour voir les valeurs retournées par le capteur 
+    * afin  d'ajuster la sensibilité de chaque couleur 
+    * enlever la section suivante d'entre commentaire
+  
+  Serial.print(color.red);
+  Serial.print(" | ");
+  Serial.print(color.green);
+  Serial.print(" | ");
+  Serial.print(color.blue);
+  Serial.print(" | ");
+  Serial.println(color.clear);
+}
+*/
+
 
 /* ****************************************************************************
 Fonctions d'initialisation (setup)
@@ -64,8 +92,10 @@ Fonctions d'initialisation (setup)
 // -> Se fait appeler seulement un fois
 // -> Generalement on y initilise les varibbles globales
 
-void setup(){
+void setup()
+{
   BoardInit();
+  setup_couleur();
 }
 
 
@@ -78,6 +108,7 @@ void loop()
 {
   // SOFT_TIMER_Update(); // A decommenter pour utiliser des compteurs logiciels
   const int BUMPER_ARRIERE=3;
+  Serial.println("main");
 
   if(ROBUS_IsBumper(BUMPER_ARRIERE)==1)
   {
