@@ -1,14 +1,16 @@
+#ifndef CAPTEURS_H
+#define CAPTEURS_H
 /*
 fonction: trouver la balle dans la zone
 entree: nombre de donnee a prendre dans le scan
 sortie: distance de la balle par rapport au capteur
 */
-int scanBall(int numDivisions);
-
-
-int presligne();//fonction qui voit si le suiveur a vu une ligne noir
+void scanBall(int numDivisions);
+//parametre d'entree est l'angle totale
+void scan(int angle);
 
 void PID_capteur();
-
-int couleur();//red =0 vert=1 bleu=2 jaune=3
+void setup_couleur();
+int LireCouleur();
+#endif
 

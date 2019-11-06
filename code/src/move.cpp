@@ -23,8 +23,8 @@ void turnAngle(int angle){ //pour tournee en multiple de 1 degre
   if (angle>0)
   {
     //setup
-    vitesseGauche =0.2;
-    vitesseDroite=-0.2;
+    vitesseGauche =0.1;
+    vitesseDroite=-0.1;
   
     //démarage moteur
     MOTOR_SetSpeed(0,vitesseGauche);
@@ -64,8 +64,8 @@ void turnAngle(int angle){ //pour tournee en multiple de 1 degre
   else if (angle<0)
   {
 
-    vitesseDroite=0.2;
-    vitesseGauche=-0.2;
+    vitesseDroite=0.1;
+    vitesseGauche=-0.1;
 
     MOTOR_SetSpeed(0,vitesseGauche);
     MOTOR_SetSpeed(1,vitesseDroite);
@@ -105,7 +105,7 @@ void turnAngle(int angle){ //pour tournee en multiple de 1 degre
 
 void avancePID(int distance){//avance pour avancer selon une distance
 
-  Serial.println((distance*3200));
+  //Serial.println((distance*3200));
   int32_t d = distance;
   int32_t tour = (d*3200)/24.5;
   const float KP = 0.0001;
@@ -127,14 +127,14 @@ void avancePID(int distance){//avance pour avancer selon une distance
     gauche = ENCODER_Read(0);
     ENCODER_Reset(1);
     ENCODER_Reset(0);
-    Serial.println(tour);
+   /* Serial.println(tour);
     Serial.println(tGauche);
-    Serial.println(tDroite);
+    Serial.println(tDroite);*/
     tGauche += gauche ;
     tDroite += droite ;
 
     //PID Proportionelle et intégral
-    Serial.println((gauche - droite)*KP + (tGauche-tDroite)*KI);
+    //Serial.println((gauche - droite)*KP + (tGauche-tDroite)*KI);
     vitesseDroite += (gauche - droite)*KP + (tGauche-tDroite)*KI;
     MOTOR_SetSpeed(1,vitesseDroite);
     //Serial.println(gauche);
@@ -146,7 +146,7 @@ void avancePID(int distance){//avance pour avancer selon une distance
   }
   
 
-  Serial.println("patate");
+  //Serial.println("patate");
   MOTOR_SetSpeed(0,0);
   MOTOR_SetSpeed(1,0);
   delay(100);
@@ -154,7 +154,7 @@ void avancePID(int distance){//avance pour avancer selon une distance
 }
 int spikePID(int distance){//avance pour avancer selon une distance
 
-  Serial.println((distance*3200));
+ // Serial.println((distance*3200));
   int32_t d = distance;
   int32_t tour = (d*3200)/24.5;
   const float KP = 0.0001;
@@ -186,14 +186,14 @@ int spikePID(int distance){//avance pour avancer selon une distance
     gauche = ENCODER_Read(0);
     ENCODER_Reset(1);
     ENCODER_Reset(0);
-    Serial.println(tour);
-    Serial.println(tGauche);
-    Serial.println(tDroite);
+    //Serial.println(tour);
+    //Serial.println(tGauche);
+    //Serial.println(tDroite);
     tGauche += gauche ;
     tDroite += droite ;
 
     //PID Proportionelle et intégral
-    Serial.println((gauche - droite)*KP + (tGauche-tDroite)*KI);
+    //Serial.println((gauche - droite)*KP + (tGauche-tDroite)*KI);
     vitesseDroite += (gauche - droite)*KP + (tGauche-tDroite)*KI;
     MOTOR_SetSpeed(1,vitesseDroite);
     //Serial.println(gauche);
@@ -205,7 +205,7 @@ int spikePID(int distance){//avance pour avancer selon une distance
   }
   
 
-  Serial.println("patate");
+  //Serial.println("patate");
   MOTOR_SetSpeed(0,0);
   MOTOR_SetSpeed(1,0);
   delay(100);
@@ -224,7 +224,7 @@ void turn3(int mult45)
   
   if(tour<0)
     tour*=-1;
-  Serial.println(tour);
+  //Serial.println(tour);
   float vitesseDroite=-0.2, vitesseGauche=0.2;
 
   int tGauche=0, tDroite=0;
@@ -285,14 +285,14 @@ void turn3(int mult45)
 
     while (tGauche < tour-erreur_45  || tDroite < tour-erreur_45)
     {
-       Serial.println("lol1");
+      // Serial.println("lol1");
       gauche=-1*ENCODER_Read(0);
       droite=ENCODER_Read(1);
       tGauche += gauche-lastG;
       tDroite += droite-lastD;
-        Serial.println(tour-erreur_45);
+       /* Serial.println(tour-erreur_45);
         Serial.println(tGauche);
-        Serial.println(tDroite);
+        Serial.println(tDroite);*/
       lastG = gauche;
       lastD = droite;
 
@@ -301,7 +301,7 @@ void turn3(int mult45)
         ENCODER_Reset(0);
         
         //PID Proportionelle et intégral
-        Serial.println((gauche - droite)*KP + (tGauche-tDroite)*KI);
+        //Serial.println((gauche - droite)*KP + (tGauche-tDroite)*KI);
         vitesseDroite += ((gauche - droite)*KP + (tGauche-tDroite)*KI);
         lastG=0;
         lastD=0;
@@ -318,7 +318,7 @@ void turn3(int mult45)
   }
   MOTOR_SetSpeed(0,0);
   MOTOR_SetSpeed(1,0);
-  Serial.println(tGauche);
+ /* Serial.println(tGauche);
   Serial.println(tDroite);
   Serial.println("meu");
   Serial.println(tour-erreur_45);
@@ -326,7 +326,7 @@ void turn3(int mult45)
   Serial.println(gauche);
   Serial.println(droite);
   Serial.println(ENCODER_Read(0));
-  Serial.println(ENCODER_Read(1));
+  Serial.println(ENCODER_Read(1));*/
 
 delay(100);
 }

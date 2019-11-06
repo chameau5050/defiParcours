@@ -1,4 +1,5 @@
-
+#ifndef MOVE_H
+#define MOVE_H
 /*
 fonction : faire tourner le robot à des multiple de 45 degré
 entrer :  multiple de 45 degré positif pour tourner vers la droite négatif vers la gauche
@@ -24,3 +25,4 @@ fonction: avancer et spike ball
 entrer: distance
 sortie: rien*/
 int spikePID(int distance);
+#endif

@@ -12,8 +12,12 @@ Inclure les librairies de functions que vous voulez utiliser
 #include <Arduino.h>
 #include <LibRobus.h> // Essentielle pour utiliser RobUS
 #include <SharpIR.h>
-#include "move.h"
-#include "capteur.h"
+#include <move.h>
+#include <capteur.h>
+#include <stdio.h>
+#include <math.h>
+#include <ADJDS311.h>
+#include <PID.h>
 /* ****************************************************************************
 Variables globales et defines
 **************************************************************************** */
@@ -24,7 +28,13 @@ int target=1;
 /* ****************************************************************************
 Vos propres fonctions sont creees ici
 **************************************************************************** */
-
+void suivre()
+{
+  Serial.println("rentre capteur");
+  PID_capteur();
+  Serial.println("rentre decel");
+  Deceleration();
+}
 /* ****************************************************************************
 Fonctions d'initialisation (setup)
 **************************************************************************** */
@@ -45,8 +55,7 @@ Fonctions de boucle infini (loop())
 void loop() {
   // SOFT_TIMER_Update(); // A decommenter pour utiliser des compteurs logiciels
   delay(10);// Delais pour décharger le CPU
-  int dis=scanBall(20);
+  scan(120);
   delay(1000);
-  avancePID(dis*3);
-  delay(500);
+  delay(5000);
 }
