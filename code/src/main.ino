@@ -29,7 +29,7 @@ void robotB();
 void suivre();
 
 int bleu=1, jaune=2, rouge=3, vert=4;
-int couleuri=bleu;//ce que tu changes dans le main pour que le défi fonctionne
+int couleuri=jaune;//ce que tu changes dans le main pour que le défi fonctionne
 int couleurf=bleu;//ce que tu changes dans le main pour que le défi fonctionne
 int checkline(){
   int gauche_3=analogRead(A7), gauche_2=analogRead(A6), gauche_1=analogRead(A5), gauche_0=analogRead(A4);
@@ -42,29 +42,36 @@ int checkline(){
 }
 }
 void robotA(int couleuri){
-  if (ROBUS_IsBumper(3)==1){
+  int change=0;
+
+  if (ROBUS_IsBumper(3)==1&&change==0){
+    change=1;
+    setup_couleur();
     SERVO_Enable(0);
     SERVO_SetAngle(0,70);
     if (couleuri==1){
      turnAngle(90);
-     avancePID(35);
+     avancePID(37);
      turnAngle(45);
+      suivre();
+    avancePID(29);
+    SERVO_SetAngle(0,140);
+    delay(1000);
+    SERVO_SetAngle(0,110);
+    MOTOR_SetSpeed(0,-.1);
+    MOTOR_SetSpeed(0,-.1);
+    delay(100);
+    MOTOR_SetSpeed(0,0);
+    MOTOR_SetSpeed(0,0);
+    turnAngle(190);
+    avancePID(105);
     }
     if (couleuri==2){
-     turnAngle(-90);
-    }
-    if (couleuri==3){
+      turnAngle(-90);
+      avancePID(35);
       turnAngle(-45);
-      avancePID(50);
-      turnAngle(45);
-    }
-    if (couleuri==4){
-      turnAngle(45);
-      avancePID(50);
-      turnAngle(-45);
-    }
-    suivre();
-    avancePID(32);
+       suivre();
+    avancePID(30);
     SERVO_SetAngle(0,135);
     delay(1000);
     SERVO_SetAngle(0,115);
@@ -73,19 +80,61 @@ void robotA(int couleuri){
     delay(100);
     MOTOR_SetSpeed(0,0);
     MOTOR_SetSpeed(0,0);
-    turnAngle(180);
+    turnAngle(195);
     avancePID(100);
+    }
+    if (couleuri==3){
+      turnAngle(-45);
+      avancePID(70);
+      turnAngle(90);
+      avancePID(28);
+      turnAngle(-90);
+       suivre();
+    avancePID(28);
+    SERVO_SetAngle(0,135);
+    delay(1000);
+    SERVO_SetAngle(0,110);
+    MOTOR_SetSpeed(0,-.1);
+    MOTOR_SetSpeed(0,-.1);
+    delay(100);
+    MOTOR_SetSpeed(0,0);
+    MOTOR_SetSpeed(0,0);
+    turnAngle(194);
+    avancePID(100);
+      
+    }
+    if (couleuri==4){
+      turnAngle(45);
+      avancePID(90);
+      turnAngle(-90);
+      avancePID(23);
+      turnAngle(90);
+      suivre();
+      avancePID(28);
+      SERVO_SetAngle(0,135);
+      delay(1000);
+      SERVO_SetAngle(0,110);
+      MOTOR_SetSpeed(0,-.1);
+      MOTOR_SetSpeed(0,-.1);
+      delay(100);
+      MOTOR_SetSpeed(0,0);
+      MOTOR_SetSpeed(0,0);
+      turnAngle(188);
+      avancePID(105);
+    
+    }
     //suivre();
     //A AJUSTER
     SERVO_SetAngle(0,70);
-    MOTOR_SetSpeed(0,-.1);
-    MOTOR_SetSpeed(0,-.1);
-    delay(1000);
+    MOTOR_SetSpeed(0,-0.2);
+    MOTOR_SetSpeed(1,-0.2);
+    delay(8000);
     MOTOR_SetSpeed(0,0);
-    MOTOR_SetSpeed(0,0);
+    MOTOR_SetSpeed(1,0);
 
 }
 }
+/*
 void robotB(int couleurf)
 {
   scan(120);
@@ -111,14 +160,13 @@ void robotB(int couleurf)
   }
   suivre(); 
   //a modifier
-}
+}*/
 
 /* ****************************************************************************
 Vos propres fonctions sont creees ici
 **************************************************************************** */
 void suivre()
 {
-  setup_couleur();
   Serial.println("rentre capteur");
   PID_capteur();
   //Serial.println("rentre decel");

@@ -42,7 +42,7 @@ void PID_capteur()
   const float KP = 0.00001, KI = 0.000001, KD=0.00001;//a travailler
   const int BUMPER_ARRIERE=3, MoteurGauche=0, MoteurDroit=1;
 
-  while((LireCouleur()==0 || LireCouleur()==2)  && ROBUS_IsBumper(BUMPER_ARRIERE)==0) //|| (analogRead(A7)<500 && analogRead(A0)<500))
+  while(LireCouleur()!=1  && ROBUS_IsBumper(BUMPER_ARRIERE)==0) //|| (analogRead(A7)<500 && analogRead(A0)<500))
   {
     Serial.print("couleur: ");
     Serial.println(LireCouleur());
