@@ -39,10 +39,10 @@ void PID_capteur()
   int droite_3=analogRead(A0), droite_2=analogRead(A1), droite_1=analogRead(A2), droite_0=analogRead(A3);
   float VitesseG=0, VitesseD=0;
   long long ErreurCaptP=0, ErreurCaptI=0, ErreurCaptD=0;
-  const float KP = 0.0001, KI = 0.000001, KD=0.0001;//a travailler
+  const float KP = 0.00001, KI = 0.000001, KD=0.00001;//a travailler
   const int BUMPER_ARRIERE=3, MoteurGauche=0, MoteurDroit=1;
 
-  while(LireCouleur()==0 && ROBUS_IsBumper(BUMPER_ARRIERE)==0) //|| (analogRead(A7)<500 && analogRead(A0)<500))
+  while((LireCouleur()==0 || LireCouleur()==2)  && ROBUS_IsBumper(BUMPER_ARRIERE)==0) //|| (analogRead(A7)<500 && analogRead(A0)<500))
   {
     Serial.print("couleur: ");
     Serial.println(LireCouleur());
@@ -66,8 +66,8 @@ void PID_capteur()
     VitesseD=KP*(ErreurCaptP)+KI*(ErreurCaptI)+KD*(ErreurCaptD);
     VitesseG=KP*(-ErreurCaptP)+KI*(-ErreurCaptI)+KD*(-ErreurCaptD);
 
-    MOTOR_SetSpeed(MoteurGauche, 0.5+VitesseG);
-    MOTOR_SetSpeed(MoteurDroit, 0.5+VitesseD);
+    MOTOR_SetSpeed(MoteurGauche, 0.3+VitesseG);
+    MOTOR_SetSpeed(MoteurDroit, 0.3+VitesseD);
 
     delay(10);
   }
@@ -110,7 +110,7 @@ void Deceleration()
     ENCODER_Reset(MoteurDroit);
     ENCODER_Reset(MoteurGauche);
 
-    Serial.println("dans decel");
+    //Serial.println("dans decel");
 
     delay(10);
   }
